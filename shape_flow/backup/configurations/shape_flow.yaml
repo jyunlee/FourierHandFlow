@@ -1,0 +1,63 @@
+method: 4d_model
+
+device: cuda
+
+data:
+  dataset: interhand_seq
+  dataset_folder: /data/hand_data/AFOF/InterHand_processed_intag_seq 
+  leap_dataset_folder: /data/hand_data/AFOF/InterHand_processed_2hands
+  joints_folder: /data/hand_data/AFOF/ours_joint_refined #/data2/ours_joint_refined_final  
+  use_gt_joints: False
+  bm_path: /workspace/AFOF/leap/body_models/mano/models/MANO_RIGHT.pkl
+  side: right
+
+  sampling_config:
+     n_points_posed: 512  # number of points sampled in the posed space
+     n_points_can: 1024   # number of points sampled in the canonical space
+
+     points_uniform_ratio: 0.5  # 50% of training points are sampled uniformly and 50% around the mesh surface
+     bbox_padding: 0.3    # padding for boxes around meshes
+     points_padding: 0.1  # padding for points
+     points_sigma:  0.01  # sampling std
+
+model:  # hyper parameters for the model
+  shape_encoder:
+    out_dim: 100
+    hidden_size: 128
+
+  structure_encoder:
+    local_feature_size: 6
+
+  pose_encoder: null
+
+  onet:
+    hidden_size: 256
+
+  local_feature_encoder:
+    point_feature_len: 120
+
+  inv_lbs_model_path: ./trained_models/inv_lbs/interhand_split/model_best.pt
+  inv_lbs_model_config:
+    hidden_size: 200  # per-layer number of neurons
+    pn_dim: 100  # PointNet feature dimensionality
+    fwd_trans_cond_dim: 80
+
+  fwd_lbs_model_path: ./trained_models/fwd_lbs/interhand_split/model_best.pt
+  fwd_lbs_model_config:
+    hidden_size: 200  # per-layer number of neurons
+    pn_dim: 100  # PointNet feature dimensionality
+
+training:
+  out_dir: ./trained_models/4d_baseline_2hands_subdivisionx4_fixed_fourier_our-new-joints_high-freq_scale-10_fixed_basis_polish #_lightweight #scratch_   #4d_baseline_2hands_subdivisionx3_fixed_randsurf_smooth_  #_randsurf #_randsurf #_sep_fc_no_bn #check_iou #4d_baseline_fixed_dense_pts_len17_fixed_sampler #_deformed_pts_fixed #_scale100 #_deformed_pts #_frame #_test
+  batch_size: 17
+
+  model_selection_metric: corr_l2
+  model_selection_mode: minimize
+
+  backup_every: 2000
+  validate_every: 2000
+  max_iterations: 500000
+
+  max_epochs: -1
+  print_every: 50
+
