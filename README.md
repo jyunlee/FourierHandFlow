@@ -17,7 +17,7 @@
 
 &nbsp;
 
-📌 _The code instructions will be updated shortly!_
+📌 _Codes are updated. The instructions will be also updated shortly!_
 
 &nbsp;
 
